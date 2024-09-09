@@ -23,8 +23,8 @@ export class GitCommitObject {
     const gitCommitObject = new GitCommitObject(hash);
     gitCommitObject.hash = hash
     gitCommitObject.path = `.git/objects/${hash.slice(0, 2)}/${hash.slice(2)}`
-    const planeText: string = await readZlibFile(gitCommitObject.path);
-    console.log(planeText.split("\n"))
+    // const planeText: string = await readZlibFile(gitCommitObject.path);
+    // console.log(planeText.split("\n"))
     // for (const line of planeText.split("\n")) {
     //   if (line.startsWith("tree")) {
     //     gitCommitObject.tree = line.split(" ")[1]

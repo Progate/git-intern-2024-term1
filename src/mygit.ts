@@ -1,12 +1,12 @@
 import { isGitRepositoryValid } from "./checks.js";
 import { GitRepositoryDestroyedError } from "./errors.js";
-import { hello } from "./hello.js";
+// import { hello } from "./hello.js";
 import { isFileExists, readTextFile } from "./utils.js";
 import { GitCommitObject } from "./models.js";
 
 export const mygit = async (argv: Array<string>): Promise<void> => {
-  console.log(hello());
-  console.log(argv);
+  // console.log(hello());
+  // console.log(argv);
   if (argv[2] === "log") {
     return await log();
   }
@@ -26,7 +26,7 @@ const log = async (): Promise<void> =>{
       console.error("予期せぬエラーが発生しました");
     }
   }
-  console.log("the current directory is a valid git repository.");
+  // console.log("the current directory is a valid git repository.");
 
   // read .git/HEAD
   let headText: string = "";
@@ -35,7 +35,7 @@ const log = async (): Promise<void> =>{
   } catch (error) {
     console.error("HEADファイルの読み込み中にエラーが発生しました:", error);
   }
-  console.log("HEADファイルの内容:", headText);
+  // console.log("HEADファイルの内容:", headText);
 
   // read the commit object hash from the ref file
   let commitObjectHash: string = "";
@@ -57,9 +57,9 @@ const log = async (): Promise<void> =>{
   } else {
     commitObjectHash = headText.trim();
   }
-  console.log("最新のコミットオブジェクトのハッシュ値:", commitObjectHash);
+  // console.log("最新のコミットオブジェクトのハッシュ値:", commitObjectHash);
   const commitObject = await GitCommitObject.build(commitObjectHash);
-  console.log(commitObject.hash);
+  // console.log(commitObject.hash);
   console.log(`commit ${commitObject.hash}${branchName ? ( ` (HEAD -> ${branchName})`):("")} `);
   // if (commitObject.parent) {
   //   console.log(`parent: ${commitObject.parent.hash.slice(0, 7)} ${commitObject.hash.slice(0, 7)}`);
