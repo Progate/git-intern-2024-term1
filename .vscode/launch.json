@@ -1,0 +1,22 @@
+{
+  "configurations": [
+    {
+      "name": "Launch 'mygit status'",
+      "program": "${workspaceFolder}/bin/main.mjs",
+      "args": ["status"],
+      "request": "launch",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "node"
+    },
+
+    {
+      "name": "Launch 'commit'",
+      "program": "${workspaceFolder}/bin/main.mjs",
+      "args": ["commit", "This is a commit message"],
+      "cwd": "${workspaceFolder}/tmp/empty",
+      "request": "launch",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "node"
+    }
+  ]
+}
