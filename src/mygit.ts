@@ -6,6 +6,15 @@ import { isFileExists, readTextFile } from "./utils.js";
 export const mygit = async (argv: Array<string>): Promise<void> => {
   console.log(hello());
   console.log(argv);
+  if (argv[2] === "log") {
+    return await log();
+  }
+  // Avoid eslint error by adding some async operation.
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+};
+
+
+const log = async (): Promise<void> =>{
   // Check if the current directory is a valid git repository.
   try {
     await isGitRepositoryValid();
@@ -47,6 +56,4 @@ export const mygit = async (argv: Array<string>): Promise<void> => {
     commitObjectHash = headText.trim();
   }
   console.log("最新のコミットオブジェクトのハッシュ値:", commitObjectHash);
-  // Avoid eslint error by adding some async operation.
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-};
+}
