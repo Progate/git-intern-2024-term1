@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import * as path from 'path';
 import { inflateSync } from 'zlib';
 
 export function uncompressZlib(path: string): string | null {
@@ -9,4 +10,17 @@ export function uncompressZlib(path: string): string | null {
   } catch (err) {
     return null;
   }
+}
+
+export function getGitPath(dir: string): string {
+  const gitDir = path.join(dir, '.git');
+  if(fs.existsSync(gitDir) && fs.lstatSync(gitDir).isDirectory()) {
+    return gitDir;
+  }
+
+  const parent = path.dirname(dir);
+  if(parent == dir) {
+    throw Error("not a git repository");
+  }
+  return getGitPath(parent);
 }
