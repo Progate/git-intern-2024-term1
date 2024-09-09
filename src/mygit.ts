@@ -40,7 +40,7 @@ const log = async (): Promise<void> =>{
   // read the commit object hash from the ref file
   let commitObjectHash: string = "";
   let branchName: string | undefined = undefined;
-  if (headText.includes("ref: refs/heads/")) {
+  if (headText.startsWith("ref: refs/heads/")) {
     const refPath = headText.slice(5, -1).trim();
     branchName = refPath.split("/").pop();
     try {
