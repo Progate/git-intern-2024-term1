@@ -1,7 +1,7 @@
 import { GitRepositoryDestroyedError } from "./errors.js";
 import { isDirExists, isFileExists } from "./utils.js";
 
-const requiredFolders: Array<string> = [".git/objects", ".git/refs/heads"];
+const requiredFolders: Array<string> = [".git", ".git/objects", ".git/refs/heads"];
 
 const requiredFiles: Array<string> = [".git/HEAD"];
 
