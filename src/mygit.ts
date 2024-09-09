@@ -1,7 +1,7 @@
 import { log } from "./log.js";
 
 export const mygit = async (argv: Array<string>): Promise<void> => {
-  if(argv[2] == "log") {
+  if (argv[2] == "log") {
     console.log(log(argv));
     return;
   }
