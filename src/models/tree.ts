@@ -1,4 +1,5 @@
 import * as fs from "node:fs";
+import * as crypto from 'crypto';
 
 import { getGitPath } from "../utils.js";
 import { Blob } from "./blob.js";
@@ -21,7 +22,7 @@ export class Tree {
     files.forEach((fileName) => {
       const fullPathToFile = currentDir + fileName;
       const stats = fs.statSync(fullPathToFile);
-      if (stats.isDirectory()) {
+      if (stats.isDirectory() && fileName !== '.git') {
         // Direcotryなら再帰
         const dir: Directory = {
           kind: "Directory",
@@ -31,18 +32,22 @@ export class Tree {
         };
 
         if (dir.direcotry.files.length !== 0) {
+          // 空のディレクトリは含めない
           this.directories.push(dir);
         }
       } else {
         // Fileなので、追跡対象ならfilesに加える
-        if (
-          index.entries.some(
+        const item = index
+          .entries
+          .find(
             (entry) => entry.device === stats.dev && entry.inode === stats.ino,
-          )
-        ) {
+          );
+        if (item) {
+          const suffix = item.hashForBlob.slice(0, 2) + "/" + item.hashForBlob.slice(2);
+          const pathToBlobObject = getGitPath(process.cwd()) + "objects/" + suffix;
           const file: File = {
             kind: "File",
-            blob: new Blob(fullPathToFile),
+            blob: new Blob(pathToBlobObject),
             fileName: fileName,
             authority: stats.mode,
           };
@@ -50,12 +55,35 @@ export class Tree {
         }
       }
     });
-    this.hash = this.generateObjectContent();
+
+    const content = this.generateObjectContent();
+    this.hash = crypto.createHash('sha1')
+      .update(content)
+      .digest('hex');
   }
 
   public generateObjectContent(): string {
     // バイナリをwriteしないといけないことに気づいてしまったので一旦放置
-    return "";
+    const items: Array<{mode: string; name: string; hash: string }> = [];
+    for (const file of this.files) {
+      const fileMode = file.authority.toString(8).padStart(6, '0');
+      const fileHash = file.blob.hash;
+      items.push({ mode: fileMode, name: file.fileName, hash: fileHash });
+    }
+
+    for (const dir of this.directories) {
+      const dirMode = dir.authority.toString(8).padStart(6, '0');
+      const dirHash = dir.direcotry.hash;
+      items.push({ mode: dirMode, name: dir.fileName, hash: dirHash });
+    }
+
+    const content = items.map(
+        item => `${item.mode} ${item.name}\0${Buffer.from(item.hash, 'hex').toString()}`
+      )
+      .join('');
+    const contentWithHeader = `tree ${content.length.toString()}\0${content}`;
+
+    return contentWithHeader;
   }
 }
 
