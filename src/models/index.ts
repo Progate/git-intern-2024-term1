@@ -18,7 +18,7 @@ export class Index {
     this.entryCount = header.readUInt32BE(8);
 
     let offset = 12;
-    while (offset < buffer.length) {
+    while (offset < buffer.length - 20) {
       const entry: Entry = {
         ctimeSec: buffer.readUInt32BE(offset),
         ctimeNanoSec: buffer.readUInt32BE(offset + 4),
@@ -31,16 +31,14 @@ export class Index {
         groupID: buffer.readUInt32BE(offset + 32),
         fileSize: buffer.readUInt32BE(offset + 36),
         hashForBlob: buffer.subarray(offset + 40, offset + 60).toString("hex"),
-        fileNameLength: 0,
+        fileNameLength: buffer.readUInt16BE(offset + 60),
         fileName: "",
       };
-      const flags = buffer.readUInt16BE(offset + 60);
-      entry.fileNameLength = flags & 0x0fff;
       entry.fileName = buffer
         .subarray(offset + 62, offset + 62 + entry.fileNameLength)
         .toString("utf8");
-      offset += 62 + entry.fileNameLength;
-      offset = Math.ceil(offset / 8) * 8;
+      const currentOffset = offset + 62 + entry.fileNameLength;
+      offset = currentOffset + 8 - ((currentOffset-12) % 8);
       this.entries.push(entry);
     }
   }
