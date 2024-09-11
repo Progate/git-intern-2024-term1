@@ -6,6 +6,7 @@ import { Blob } from "./blob.js";
 import { Index } from "./index.js";
 
 const index = new Index();
+await index.build('.git/index');
 
 export class Tree {
   directories: Array<Directory>;
@@ -18,7 +19,6 @@ export class Tree {
 
     const currentDir = path ? path : getGitPath(process.cwd()) + "../";
     const files = fs.readdirSync(currentDir);
-
     files.forEach((fileName) => {
       const fullPathToFile = currentDir + fileName;
       const stats = fs.statSync(fullPathToFile);
@@ -26,9 +26,9 @@ export class Tree {
         // Direcotryなら再帰
         const dir: Directory = {
           kind: "Directory",
-          direcotry: new Tree(fullPathToFile),
-          fileName: fullPathToFile,
-          authority: stats.mode,
+          direcotry: new Tree(fullPathToFile + '/'),
+          fileName: fileName,
+          authority: 16384, // 固定値
         };
 
         if (dir.direcotry.files.length !== 0) {
@@ -40,7 +40,7 @@ export class Tree {
         const item = index
           .entries
           .find(
-            (entry) => entry.device === stats.dev && entry.inode === stats.ino,
+            (entry) => entry.inode === stats.ino,
           );
         if (item) {
           const suffix = item.hashForBlob.slice(0, 2) + "/" + item.hashForBlob.slice(2);
@@ -60,10 +60,11 @@ export class Tree {
     this.hash = crypto.createHash('sha1')
       .update(content)
       .digest('hex');
+
+    // console.log(this);
   }
 
-  public generateObjectContent(): string {
-    // バイナリをwriteしないといけないことに気づいてしまったので一旦放置
+  public generateObjectContent(): Buffer {
     const items: Array<{mode: string; name: string; hash: string }> = [];
     for (const file of this.files) {
       const fileMode = file.authority.toString(8).padStart(6, '0');
@@ -76,14 +77,25 @@ export class Tree {
       const dirHash = dir.direcotry.hash;
       items.push({ mode: dirMode, name: dir.fileName, hash: dirHash });
     }
+    const contentBuffer = Buffer.concat(items.map(
+      item => {
+        // modeとnameをASCIIバイト列に変換し、ヌル文字（\0）で区切る
+        const header = Buffer.from(`${item.mode} ${item.name}\0`, 'utf-8');
+        // ハッシュをバイナリとして変換
+        const hashBuffer = Buffer.from(item.hash, 'hex');
 
-    const content = items.map(
-        item => `${item.mode} ${item.name}\0${Buffer.from(item.hash, 'hex').toString()}`
-      )
-      .join('');
-    const contentWithHeader = `tree ${content.length.toString()}\0${content}`;
+        // 結合して返す
+        return Buffer.concat([header, hashBuffer]);
+      }
+    ));
 
-    return contentWithHeader;
+    // 全体のバイナリデータにツリーの長さとヌル文字を含むヘッダーを付ける
+    const headerBuffer = Buffer.from(`tree ${contentBuffer.length.toString()}\0`, 'utf-8');
+    const contentWithHeaderBuffer = Buffer.concat([headerBuffer, contentBuffer]);
+
+    // バイナリデータをファイルに書き込み
+    // fs.writeFileSync('output.bin', contentWithHeaderBuffer);
+    return contentWithHeaderBuffer;
   }
 }
 
