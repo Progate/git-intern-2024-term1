@@ -10,7 +10,6 @@ export class Commit {
 
   constructor() {
     this.tree = new Tree();
-    this.parent = "";
     this.author = "";
     this.createdAt = 0;
     this.message = "";
