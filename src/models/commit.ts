@@ -2,7 +2,7 @@ import { Tree } from "./tree.js";
 
 export class Commit {
   tree: Tree;
-  parent: string;
+  parent?: string;
   author: string;
   createdAt: number;
   message: string;
