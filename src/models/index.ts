@@ -1,7 +1,7 @@
 import { Entry } from "./entry.js";
 
 export class Index {
-  version: number = 2;
+  version = 2;
   entries: Array<Entry>;
   entryCount: number;
   constructor() {
