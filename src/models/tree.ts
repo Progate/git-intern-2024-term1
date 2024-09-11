@@ -1,4 +1,4 @@
-import { Blob } from './blob.js'
+import { Blob } from "./blob.js";
 
 export class Tree {
   directories: Array<Directory>;

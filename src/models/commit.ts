@@ -1,4 +1,4 @@
-import { Tree } from './tree.js'
+import { Tree } from "./tree.js";
 
 export class Commit {
   tree: Tree;
@@ -9,7 +9,7 @@ export class Commit {
   hash: string;
 
   constructor() {
-    this.tree = new Tree;
+    this.tree = new Tree();
     this.parent = "";
     this.author = "";
     this.createdAt = 0;
