@@ -8,7 +8,7 @@ export function uncompressZlib(path: string): string {
     const data = fs.readFileSync(path);
     const buf = inflateSync(data);
     return buf.toString();
-  } catch(e) {
+  } catch (e) {
     console.error(`Failed to uncompress file ${path}`, e);
     exit(1);
   }
