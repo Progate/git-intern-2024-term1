@@ -50,18 +50,13 @@ export class Tree {
         }
       }
     });
-    this.hash = "";
+    this.hash = this.generateObjectContent();
   }
 
-  // public generateObjectcontent(): string {
-  //   const items = [...this.files, ...this.directories].sort((x, y) => x.fileName.localeCompare(y.fileName));
-  //   let res = [];
-  //   for (const item of items) {
-  //     if(item.kind === "Directory") {
-  //       res.push(`${item.authority} blob ${item.direcotry.hash}} `)
-  //     }
-  //   }
-  // }
+  public generateObjectContent(): string {
+    // バイナリをwriteしないといけないことに気づいてしまったので一旦放置
+    return "";
+  }
 }
 
 export interface File {
