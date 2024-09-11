@@ -1,7 +1,7 @@
 import assert from "node:assert";
+import { readFile } from "node:fs/promises";
 import { describe, it } from "node:test";
 
-import { readFile } from "node:fs/promises";
 import { Index } from "./index.js";
 
 describe("index", () => {
@@ -15,7 +15,7 @@ describe("index", () => {
 
     // .git/index に記載されたハッシュ値を取得する
     const rawIndexContents = await readFile(".git/index");
-    const expectedResult = rawIndexContents.subarray(-20).toString('hex');
+    const expectedResult = rawIndexContents.subarray(-20).toString("hex");
 
     assert.strictEqual(mockedLog.mock.calls[0]?.arguments[0], expectedResult);
   });
