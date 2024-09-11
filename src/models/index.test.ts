@@ -24,6 +24,6 @@ describe("index", () => {
     const index = new Index();
     await index.build(indexPath);
     assert.strictEqual(index.entryCount, 5);
-    assert.strictEqual(index.entries[4].fileName, "EEEEE");
+    assert.strictEqual(index.entries[4]?.fileName, "EEEEE");
   });
 });
