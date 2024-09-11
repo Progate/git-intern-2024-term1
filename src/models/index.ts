@@ -38,7 +38,7 @@ export class Index {
         .subarray(offset + 62, offset + 62 + entry.fileNameLength)
         .toString("utf8");
       const currentOffset = offset + 62 + entry.fileNameLength;
-      offset = currentOffset + 8 - ((currentOffset-12) % 8);
+      offset = currentOffset + 8 - ((currentOffset - 12) % 8);
       this.entries.push(entry);
     }
   }
