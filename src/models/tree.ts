@@ -73,11 +73,13 @@ export class Tree {
     }
 
     for (const dir of this.directories) {
-      const dirMode = dir.authority.toString(8).padStart(6, '0');
+      const dirMode = '40000';
       const dirHash = dir.direcotry.hash;
       items.push({ mode: dirMode, name: dir.fileName, hash: dirHash });
     }
-    const contentBuffer = Buffer.concat(items.map(
+    const contentBuffer = Buffer.concat(items
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map(
       item => {
         // modeとnameをASCIIバイト列に変換し、ヌル文字（\0）で区切る
         const header = Buffer.from(`${item.mode} ${item.name}\0`, 'utf-8');
@@ -94,7 +96,7 @@ export class Tree {
     const contentWithHeaderBuffer = Buffer.concat([headerBuffer, contentBuffer]);
 
     // バイナリデータをファイルに書き込み
-    // fs.writeFileSync('output.bin', contentWithHeaderBuffer);
+    fs.writeFileSync('output.bin', contentWithHeaderBuffer);
     return contentWithHeaderBuffer;
   }
 }
