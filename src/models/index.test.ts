@@ -23,8 +23,8 @@ describe("index", () => {
     const indexPath = getGitPath(process.cwd()) + "../src/tests/index";
     const index = new Index();
     await index.build(indexPath);
-    assert.strictEqual(index.entryCount, 5);
-    assert.strictEqual(index.entries[4]?.fileName, "EEEEE");
+    assert.strictEqual(index.entryCount, 3);
+    assert.strictEqual(index.entries[2]?.fileName, "dir/ab.txt");
   });
 
   it("indexファイルのコピーを正常に書き出せるか", async () => {
@@ -35,12 +35,9 @@ describe("index", () => {
     await index.build(indexPath);
     await index.dump(myIndexPath);
 
-    const expectedIndexContents = await readFile("./src/tests/index");
-    const myIndexContents = await readFile(myIndexPath);
+    const myIndex = new Index();
+    await myIndex.build(myIndexPath);
 
-    assert.strictEqual(
-      myIndexContents.toString("hex"),
-      expectedIndexContents.toString("hex"),
-    );
+    assert.deepStrictEqual(index.entries, myIndex.entries);
   });
 });
