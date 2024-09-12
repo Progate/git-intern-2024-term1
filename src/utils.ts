@@ -1,4 +1,5 @@
 import * as fs from "node:fs";
+import { access } from "node:fs/promises";
 import * as path from "node:path";
 import { exit } from "process";
 import { inflateSync } from "zlib";
@@ -42,5 +43,14 @@ export function fetchHeadHash(): string | undefined {
   } else {
     // headContentがhashのはずなのでそのまま返す
     return headContent;
+  }
+}
+
+export async function doesFileExist(filePath: string): Promise<boolean> {
+  try {
+    await access(filePath);
+    return true;
+  } catch {
+    return false;
   }
 }
