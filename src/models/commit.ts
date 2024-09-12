@@ -1,6 +1,7 @@
 import { getGitPath } from "../utils.js";
 import { Tree } from "./tree.js";
 import * as fs from "node:fs";
+import * as os from 'os';
 
 export class Commit {
   tree: Tree;
@@ -9,16 +10,12 @@ export class Commit {
   createdAt: number;
   message: string;
   hash: string;
+  email: string;
 
-  constructor(message: string) {
+  constructor(message: string, username?: string, email?: string) {
     this.tree = new Tree();
-    const config = fs
-      .readFileSync((getGitPath(process.cwd()) + "config"))
-      .toString();
-
-
-    console.log(config);
-    this.author = "";
+    this.author = username ?? os.userInfo().username;
+    this.email = email ?? os.hostname();
     // unixtime(秒単位)
     this.createdAt =  Math.floor(Date.now() / 1000);
     this.message = message;
