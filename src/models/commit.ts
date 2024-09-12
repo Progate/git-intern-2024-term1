@@ -1,6 +1,7 @@
 import * as crypto from "crypto";
-import * as os from "os";
 import * as fs from "fs";
+import * as os from "os";
+
 import { compressZlib, fetchHeadHash, getGitPath } from "../utils.js";
 import { Tree } from "./tree.js";
 
@@ -58,7 +59,7 @@ export class Commit {
 
     const prefix = this.hash.slice(0, 2);
     const suffix = this.hash.slice(2);
-    const objectDir = getGitPath(process.cwd()) + "objects/" + prefix
+    const objectDir = getGitPath(process.cwd()) + "objects/" + prefix;
     const path = objectDir + "/" + suffix;
 
     if (!fs.existsSync(objectDir)) {

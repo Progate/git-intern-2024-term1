@@ -1,8 +1,13 @@
 import { readFileSync, writeFileSync } from "node:fs";
+
 import { Commit } from "../models/commit.js";
 import { getGitPath } from "../utils.js";
 
-export function commit(message: string, username?: string, email?: string): void {
+export function commit(
+  message: string,
+  username?: string,
+  email?: string,
+): void {
   console.log(message, username, email);
 
   // commit objを生成する
@@ -12,7 +17,7 @@ export function commit(message: string, username?: string, email?: string): void
   // headをhashに書き換える
   let headPath = getGitPath(process.cwd()) + "HEAD";
   const headContent = readFileSync(headPath).toString().trim();
-  if(headContent.startsWith("ref: ")){
+  if (headContent.startsWith("ref: ")) {
     headPath = getGitPath(process.cwd()) + headContent.slice("ref: ".length);
   }
 
