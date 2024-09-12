@@ -6,19 +6,17 @@ import { Entry } from "./entry.js";
 export class Index {
   version = 2;
   entries: Array<Entry>;
-  entryCount: number;
   constructor() {
     this.entries = [];
-    this.entryCount = this.entries.length;
   }
 
   async build(path: string): Promise<void> {
     const buffer = await readFile(path);
     const header = buffer.subarray(0, 12);
-    this.entryCount = header.readUInt32BE(8);
+    const entryCount = header.readUInt32BE(8);
 
     let offset = 12;
-    for (let i = 0; i < this.entryCount; i++) {
+    for (let i = 0; i < entryCount; i++) {
       const entry: Entry = {
         ctimeSec: buffer.readUInt32BE(offset),
         ctimeNanoSec: buffer.readUInt32BE(offset + 4),
@@ -84,7 +82,7 @@ export class Index {
     const header = Buffer.alloc(12);
     header.write("DIRC", 0);
     header.writeUInt32BE(this.version, 4);
-    header.writeUInt32BE(this.entryCount, 8);
+    header.writeUInt32BE(this.entries.length, 8);
     const entriesBuffer = this.getEntriesBuffer();
     const bodyBuffer = Buffer.concat([header, entriesBuffer]);
     const hash = createHash("sha1");

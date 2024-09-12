@@ -23,7 +23,7 @@ describe("index", () => {
     const indexPath = getGitPath(process.cwd()) + "../src/tests/index";
     const index = new Index();
     await index.build(indexPath);
-    assert.strictEqual(index.entryCount, 3);
+    assert.strictEqual(index.entries.length, 3);
     assert.strictEqual(index.entries[2]?.fileName, "dir/ab.txt");
   });
 
