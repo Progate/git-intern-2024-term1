@@ -1,5 +1,4 @@
 import * as crypto from "crypto";
-import * as fs from "node:fs";
 import * as os from "os";
 
 import { fetchHeadHash } from "../utils.js";
@@ -25,9 +24,6 @@ export class Commit {
 
     const content = this.generateContent();
 
-    // デバッグ用: 一つ下の階層にバイナリデータをファイルに書き込み
-    // レポジトリルートでやるとレポジトリにoutput.binが絶対含まれないので安全(mygitではignoreできない)
-    fs.writeFileSync("../output.bin", content);
     this.hash = crypto.createHash("sha1").update(content).digest("hex");
   }
 
