@@ -29,8 +29,8 @@ export function getGitPath(dir: string): string {
 
 export function fetchHeadHash(): string | undefined {
   const gitRoot = getGitPath(process.cwd());
-  const headPath = gitRoot + 'HEAD';
-  if(!fs.existsSync(headPath)) {
+  const headPath = gitRoot + "HEAD";
+  if (!fs.existsSync(headPath)) {
     return undefined;
   }
 
@@ -38,7 +38,7 @@ export function fetchHeadHash(): string | undefined {
   if (headContent.startsWith("ref: ")) {
     const suffix = headContent.slice(5);
     const path = gitRoot + suffix;
-    return fs.readFileSync(path, 'utf-8').trim();
+    return fs.readFileSync(path, "utf-8").trim();
   } else {
     // headContentがhashのはずなのでそのまま返す
     return headContent;
