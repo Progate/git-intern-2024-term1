@@ -23,7 +23,21 @@ describe("index", () => {
     const indexPath = getGitPath(process.cwd()) + "../src/tests/index";
     const index = new Index();
     await index.build(indexPath);
-    assert.strictEqual(index.entryCount, 5);
-    assert.strictEqual(index.entries[4]?.fileName, "EEEEE");
+    assert.strictEqual(index.entryCount, 3);
+    assert.strictEqual(index.entries[2]?.fileName, "dir/ab.txt");
+  });
+
+  it("indexファイルのコピーを正常に書き出せるか", async () => {
+    const indexPath = "./src/tests/index";
+    const myIndexPath = "./src/tests/myindex";
+
+    const index = new Index();
+    await index.build(indexPath);
+    await index.dump(myIndexPath);
+
+    const myIndex = new Index();
+    await myIndex.build(myIndexPath);
+
+    assert.deepStrictEqual(index.entries, myIndex.entries);
   });
 });
