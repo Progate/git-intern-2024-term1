@@ -2,6 +2,7 @@ import assert from "node:assert";
 import { readFile } from "node:fs/promises";
 import { describe, it } from "node:test";
 
+import { getGitPath } from "../utils.js";
 import { Index } from "./index.js";
 
 describe("index", () => {
@@ -15,5 +16,14 @@ describe("index", () => {
     const expectedResult = rawIndexContents.subarray(-20).toString("hex");
 
     assert.strictEqual(indexCheckSumHash, expectedResult);
+  });
+
+  it("indexファイルから読み取ったエントリ数が正しいか", async () => {
+    console.log(process.cwd());
+    const indexPath = getGitPath(process.cwd()) + "../src/tests/index";
+    const index = new Index();
+    await index.build(indexPath);
+    assert.strictEqual(index.entryCount, 5);
+    assert.strictEqual(index.entries[4]?.fileName, "EEEEE");
   });
 });
