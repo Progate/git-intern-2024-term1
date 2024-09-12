@@ -18,7 +18,7 @@ export class Index {
     this.entryCount = header.readUInt32BE(8);
 
     let offset = 12;
-    while (offset < buffer.length - 20) {
+    for (let i = 0; i < this.entryCount; i++) {
       const entry: Entry = {
         ctimeSec: buffer.readUInt32BE(offset),
         ctimeNanoSec: buffer.readUInt32BE(offset + 4),
