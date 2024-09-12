@@ -26,3 +26,21 @@ export function getGitPath(dir: string): string {
   }
   return getGitPath(parent);
 }
+
+export function fetchHeadHash(): string | undefined {
+  const gitRoot = getGitPath(process.cwd());
+  const headPath = gitRoot + "HEAD";
+  if (!fs.existsSync(headPath)) {
+    return undefined;
+  }
+
+  const headContent = fs.readFileSync(headPath, "utf-8").trim();
+  if (headContent.startsWith("ref: ")) {
+    const suffix = headContent.slice(5);
+    const path = gitRoot + suffix;
+    return fs.readFileSync(path, "utf-8").trim();
+  } else {
+    // headContentがhashのはずなのでそのまま返す
+    return headContent;
+  }
+}
