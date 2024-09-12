@@ -1,5 +1,6 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
+import { deflateSync } from "node:zlib";
 import { exit } from "process";
 import { inflateSync } from "zlib";
 
@@ -12,6 +13,10 @@ export function uncompressZlib(path: string): string {
     console.error(`Failed to uncompress file ${path}`, e);
     exit(1);
   }
+}
+
+export function compressZlib(content: Buffer): Buffer {
+  return deflateSync(content);
 }
 
 export function getGitPath(dir: string): string {
