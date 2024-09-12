@@ -26,4 +26,21 @@ describe("index", () => {
     assert.strictEqual(index.entryCount, 5);
     assert.strictEqual(index.entries[4]?.fileName, "EEEEE");
   });
+
+  it("indexファイルのコピーを正常に書き出せるか", async () => {
+    const indexPath = "./src/tests/index";
+    const myIndexPath = "./src/tests/myindex";
+
+    const index = new Index();
+    await index.build(indexPath);
+    await index.dump(myIndexPath);
+
+    const expectedIndexContents = await readFile("./src/tests/index");
+    const myIndexContents = await readFile(myIndexPath);
+
+    assert.strictEqual(
+      myIndexContents.toString("hex"),
+      expectedIndexContents.toString("hex"),
+    );
+  });
 });
