@@ -1,6 +1,5 @@
-import { getGitPath } from "../utils.js";
+import { fetchHeadHash } from "../utils.js";
 import { Tree } from "./tree.js";
-import * as fs from "node:fs";
 import * as os from 'os';
 
 export class Commit {
@@ -19,6 +18,10 @@ export class Commit {
     // unixtime(秒単位)
     this.createdAt =  Math.floor(Date.now() / 1000);
     this.message = message;
-    this.hash = "";
+    this.hash = fetchHeadHash();
   }
+
+  // generateContent(): Buffer {
+
+  // }
 }
