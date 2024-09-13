@@ -6,24 +6,21 @@ import * as fsPromises from "node:fs/promises";
 import { Index } from "../models/index.js";
 import { getGitPath } from "../utils.js";
 
-export function fetchHeadHash(): string | undefined {
-  const gitRoot = getGitPath(process.cwd());
-  const headPath = gitRoot + "HEAD";
-
-  if (!fs.existsSync(headPath)) {
-    return undefined;
-  }
-
-  const headContent = fs.readFileSync(headPath, "utf-8").trim();
-  if (headContent.startsWith("ref: ")) {
-    const suffix = headContent.slice(5);
-    const path = gitRoot + suffix;
-    if (!fs.existsSync(path)) return undefined;
-    return fs.readFileSync(path, "utf-8").trim();
-  } else {
-    // headContentがhashのはずなのでそのまま返す
-    return headContent;
-  }
+export function fetchFilesIn(path: string): Array<string> {
+  // pathのディレクトリ内のファイルを再帰的に取得
+  const files = fs.readdirSync(path);
+  const result: Array<string> = [];
+  files.forEach((file) => {
+    if (file.startsWith(".")) return
+    const fullPath = path + "/" + file;
+    const stats = fs.statSync(fullPath);
+    if (stats.isDirectory()) {
+      result.push(...fetchFilesIn(fullPath));
+    } else {
+      result.push(fullPath);
+    }
+  });
+  return result;
 }
 
 export const status = async (): Promise<void> => {
@@ -63,11 +60,11 @@ export const status = async (): Promise<void> => {
   // 未追跡のファイル
   const index = new Index();
   await index.build(".git/index");
-  const files = fs.readdirSync(process.cwd());
+  const files = fetchFilesIn(process.cwd());
   const trackedFiles = index.entries.map((entry) => entry.inode);
   const untrackedFiles = files.filter(
     (file) =>
-      !trackedFiles.includes(fs.statSync(file).ino) && !file.startsWith("."),
+      !trackedFiles.includes(fs.statSync(file).ino),
   );
   console.info("\nUntracked files:");
   untrackedFiles.forEach((file) => {
