@@ -16,7 +16,7 @@ export const mygit = async (argv: Array<string>): Promise<void> => {
         console.error("Please specify the file path to add");
         return;
       }
-      await add(argv[3]);
+      await add(argv.slice(3));
       break;
     case "commit":
       if (!argv[3]) {
