@@ -1,4 +1,4 @@
-import { stat } from "node:fs/promises";
+import * as fsPromises from "node:fs/promises";
 
 import { Blob } from "../models/blob.js";
 import { Entry } from "../models/entry.js";
@@ -6,7 +6,7 @@ import { Index } from "../models/index.js";
 import { doesFileExist, getGitPath } from "../utils.js";
 
 const getEntryFromFile = async (addingFilePath: string): Promise<Entry> => {
-  const fileStat = await stat(addingFilePath, { bigint: true });
+  const fileStat = await fsPromises.stat(addingFilePath, { bigint: true });
   const blob = new Blob();
   const blobHash = await blob.dump(addingFilePath);
   return {

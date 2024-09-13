@@ -1,5 +1,5 @@
 import assert from "node:assert";
-import { readFile } from "node:fs/promises";
+import * as fsPromises from "node:fs/promises";
 import { describe, it } from "node:test";
 
 import { getGitPath } from "../utils.js";
@@ -12,7 +12,7 @@ describe("index", () => {
     const indexCheckSumHash = await index.calcCheckSum();
 
     // .git/index に記載されたハッシュ値を取得する
-    const rawIndexContents = await readFile(".git/index");
+    const rawIndexContents = await fsPromises.readFile(".git/index");
     const expectedResult = rawIndexContents.subarray(-20).toString("hex");
 
     assert.strictEqual(indexCheckSumHash, expectedResult);

@@ -1,4 +1,4 @@
-import { exit } from "process";
+import { exit } from "node:process";
 
 import { add } from "./commands/add.js";
 import { commit } from "./commands/commit.js";
