@@ -1,5 +1,5 @@
-import { createHash } from "crypto";
-import { readFile, writeFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import * as fsPromises from "node:fs/promises";
 
 import { doesFileExist } from "../utils.js";
 import { Entry } from "./entry.js";
@@ -15,7 +15,7 @@ export class Index {
     if (!(await doesFileExist(path))) {
       return;
     }
-    const buffer = await readFile(path);
+    const buffer = await fsPromises.readFile(path);
     const header = buffer.subarray(0, 12);
     const entryCount = header.readUInt32BE(8);
 
@@ -96,11 +96,11 @@ export class Index {
       [bodyBuffer, sha1],
       bodyBuffer.length + sha1.length,
     );
-    await writeFile(indexPath, indexBuffer);
+    await fsPromises.writeFile(indexPath, indexBuffer);
   }
 
   async calcCheckSum(): Promise<string> {
-    const rawIndexContents = await readFile(".git/index");
+    const rawIndexContents = await fsPromises.readFile(".git/index");
     const bodyData = rawIndexContents.subarray(0, -20);
     const hash = createHash("sha1");
     hash.update(bodyData);

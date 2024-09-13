@@ -1,4 +1,4 @@
-import * as crypto from "crypto";
+import { createHash } from "node:crypto";
 import * as fs from "node:fs";
 
 import { compressZlib, getGitPath } from "../utils.js";
@@ -57,7 +57,7 @@ export class Tree {
     });
 
     const content = this.generateObjectContent();
-    this.hash = crypto.createHash("sha1").update(content).digest("hex");
+    this.hash = createHash("sha1").update(content).digest("hex");
   }
 
   public generateObjectContent(): Buffer {
