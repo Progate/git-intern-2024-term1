@@ -1,7 +1,8 @@
 import * as crypto from "crypto";
+import * as fs from "fs";
 import * as os from "os";
 
-import { fetchHeadHash } from "../utils.js";
+import { compressZlib, fetchHeadHash, getGitPath } from "../utils.js";
 import { Tree } from "./tree.js";
 
 export class Commit {
@@ -50,5 +51,22 @@ export class Commit {
       `commit ${contentBody.length.toString()}\x00`,
     );
     return Buffer.concat([contentHeader, contentBody]);
+  }
+
+  public dump(): void {
+    const content = this.generateContent();
+    const compressedContent = compressZlib(content);
+
+    const prefix = this.hash.slice(0, 2);
+    const suffix = this.hash.slice(2);
+    const objectDir = getGitPath(process.cwd()) + "objects/" + prefix;
+    const path = objectDir + "/" + suffix;
+
+    if (!fs.existsSync(objectDir)) {
+      fs.mkdirSync(objectDir, { recursive: true }); // ディレクトリを再帰的に作成
+    }
+
+    if (fs.existsSync(path)) return; // ファイルがすでにあるならつくない
+    fs.writeFileSync(path, compressedContent, { mode: 0o444 });
   }
 }
