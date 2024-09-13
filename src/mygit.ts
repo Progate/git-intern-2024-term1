@@ -2,10 +2,8 @@ import { exit } from "process";
 
 import { add } from "./commands/add.js";
 import { commit } from "./commands/commit.js";
-import { hello } from "./hello.js";
 
 export const mygit = async (argv: Array<string>): Promise<void> => {
-  console.log(hello());
   console.log(argv);
 
   if (argv[2] === "add") {
