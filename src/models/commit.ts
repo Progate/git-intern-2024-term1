@@ -51,6 +51,7 @@ export class Commit {
       `commit ${contentBody.length.toString()}\x00`,
     );
     return Buffer.concat([contentHeader, contentBody]);
+
   }
 
   public dump(): void {
