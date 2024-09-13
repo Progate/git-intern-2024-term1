@@ -1,3 +1,4 @@
+import chalk from "chalk";
 import { createHash } from "node:crypto";
 import * as fs from "node:fs";
 import * as os from "node:os";
@@ -10,7 +11,6 @@ import {
   uncompressZlib,
 } from "../utils.js";
 import { Tree } from "./tree.js";
-import chalk from "chalk";
 
 export class Commit {
   tree?: Tree;
@@ -100,13 +100,13 @@ export class Commit {
     let res = chalk.red(`commit ${this.hash}\n`);
     if (this.parent) res += `parent ${this.parent}\n`;
     res += `Author ${this.author} <${this.email}>\n`;
-    if (typeof this.createdAt === 'number' && !isNaN(this.createdAt)) {
-        const date = new Date(this.createdAt * 1000);
-        res += `Date: ${date.toISOString()}\n\n`;
+    if (typeof this.createdAt === "number" && !isNaN(this.createdAt)) {
+      const date = new Date(this.createdAt * 1000);
+      res += `Date: ${date.toISOString()}\n\n`;
     } else {
-        res += `Date: Invalid Date\n\n`;
+      res += `Date: Invalid Date\n\n`;
     }
-    res += `${this.message}\n`
+    res += `${this.message}\n`;
     return res;
   }
 

@@ -1,9 +1,9 @@
 import { Commit } from "../models/commit.js";
 import { fetchHeadHash } from "../utils.js";
 
-export function log():void {
+export function log(): void {
   const hash = fetchHeadHash();
-  if(hash) {
+  if (hash) {
     console.log(createLog(hash).join("\n"));
   } else {
     console.log("No commit found.");
