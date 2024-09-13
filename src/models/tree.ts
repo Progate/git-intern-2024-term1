@@ -98,7 +98,6 @@ export class Tree {
   }
 
   public dump(): void {
-
     for (const dir of this.directories) {
       // さらに深いtreeオブジェクトについても保存する
       dir.direcotry.dump();
