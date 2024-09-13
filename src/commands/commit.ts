@@ -8,10 +8,10 @@ export function commit(
   username?: string,
   email?: string,
 ): void {
-  console.log(message, username, email);
-
   // commit objを生成する
   const commitObj = new Commit(message, username, email);
+
+  commitObj.tree.dump();
   commitObj.dump();
 
   // headをhashに書き換える
@@ -23,6 +23,6 @@ export function commit(
 
   // headのhashをcommit objectのhashに置き換える
   // 本家gitでは改行があるのでそれに従う
-  writeFileSync(headPath, commitObj.hash + "\n");
-  console.log("commit success");
+  writeFileSync(headPath, commitObj.hash + "\x0a");
+  console.log(`[${commitObj.hash.slice(0, 6)}] ${message}\n`);
 }

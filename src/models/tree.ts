@@ -1,7 +1,7 @@
 import * as crypto from "crypto";
 import * as fs from "node:fs";
 
-import { getGitPath } from "../utils.js";
+import { compressZlib, getGitPath } from "../utils.js";
 import { Blob } from "./blob.js";
 import { Index } from "./index.js";
 
@@ -95,6 +95,27 @@ export class Tree {
     // fs.writeFileSync('../output.bin', contentWithHeaderBuffer);
 
     return contentWithHeaderBuffer;
+  }
+
+  public dump(): void {
+
+    for (const dir of this.directories) {
+      // さらに深いtreeオブジェクトについても保存する
+      dir.direcotry.dump();
+    }
+
+    const content = this.generateObjectContent();
+    const compressedContent = compressZlib(content);
+
+    const prefix = this.hash.slice(0, 2);
+    const suffix = this.hash.slice(2);
+    const objectDir = getGitPath(process.cwd()) + "objects/" + prefix;
+    const path = objectDir + "/" + suffix;
+
+    if (!fs.existsSync(objectDir)) {
+      fs.mkdirSync(objectDir, { recursive: true }); // ディレクトリを再帰的に作成
+    }
+    fs.writeFileSync(path, compressedContent);
   }
 }
 
