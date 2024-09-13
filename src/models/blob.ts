@@ -1,6 +1,7 @@
 import { createHash } from "crypto";
 import * as fs from "fs/promises";
 import { exit } from "process";
+import { deflateSync } from "zlib";
 
 import { getGitPath, uncompressZlib } from "../utils.js";
 
@@ -38,11 +39,10 @@ export class Blob {
     const blobObjPath =
       getGitPath(process.cwd()) +
       "objects/" +
-      sha1.subarray(0, 2).toString("hex") +
+      sha1.toString("hex").slice(0, 2) +
       "/" +
-      sha1.subarray(2).toString("hex");
-    const blobBuffer = Buffer.concat([Buffer.from(store), sha1]);
-    await fs.writeFile(blobObjPath, blobBuffer);
+      sha1.toString("hex").slice(2);
+    await fs.writeFile(blobObjPath, deflateSync(store));
     return sha1.toString("hex");
   }
 }
