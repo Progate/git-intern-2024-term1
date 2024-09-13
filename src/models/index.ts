@@ -1,6 +1,7 @@
 import { createHash } from "crypto";
 import { readFile, writeFile } from "node:fs/promises";
 
+import { doesFileExist } from "../utils.js";
 import { Entry } from "./entry.js";
 
 export class Index {
@@ -10,7 +11,10 @@ export class Index {
     this.entries = [];
   }
 
-  async build(path: string): Promise<void> {
+  async build(path = ".git/index"): Promise<void> {
+    if (!(await doesFileExist(path))) {
+      return;
+    }
     const buffer = await readFile(path);
     const header = buffer.subarray(0, 12);
     const entryCount = header.readUInt32BE(8);
