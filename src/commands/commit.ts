@@ -27,5 +27,5 @@ export function commit(
   // headのhashをcommit objectのhashに置き換える
   // 本家gitでは改行があるのでそれに従う
   writeFileSync(headPath, commitObj.hash + "\x0a");
-  console.log(`[${commitObj.hash.slice(0, 6)}] ${message}\n`);
+  console.log(`[${commitObj.hash.slice(0, 7)}] ${message}\n`);
 }
