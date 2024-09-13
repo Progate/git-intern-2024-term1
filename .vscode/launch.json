@@ -17,6 +17,16 @@
       "request": "launch",
       "skipFiles": ["<node_internals>/**"],
       "type": "node"
+    },
+
+    {
+      "name": "Launch 'add'",
+      "program": "${workspaceFolder}/bin/main.mjs",
+      "args": ["add", "ab.txt"],
+      "cwd": "${workspaceFolder}/tmp/empty",
+      "request": "launch",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "node"
     }
   ]
 }

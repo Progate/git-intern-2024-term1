@@ -43,9 +43,11 @@ export class Tree {
             item.hashForBlob.slice(0, 2) + "/" + item.hashForBlob.slice(2);
           const pathToBlobObject =
             getGitPath(process.cwd()) + "objects/" + suffix;
+          const blob = new Blob();
+          blob.load(pathToBlobObject);
           const file: File = {
             kind: "File",
-            blob: new Blob(pathToBlobObject),
+            blob: blob,
             fileName: fileName,
             authority: stats.mode,
           };
