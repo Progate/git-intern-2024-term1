@@ -26,33 +26,35 @@ const getEntryFromFile = async (addingFilePath: string): Promise<Entry> => {
   };
 };
 
-export const add = async (addingFilePath: string): Promise<void> => {
+export const add = async (addingFiles: Array<string>): Promise<void> => {
   const indexPath = getGitPath(process.cwd()) + "index";
   const index = new Index();
   await index.build(indexPath);
-  const isFileExists = await doesFileExist(addingFilePath);
-  const existingEntryIndex = index.entries.findIndex(
-    (entry) => entry.fileName === addingFilePath,
-  );
-  if (!isFileExists && existingEntryIndex === -1) {
-    return;
-  }
-  if (isFileExists && existingEntryIndex !== -1) {
-    // 更新
-    const newEntry = await getEntryFromFile(addingFilePath);
-    index.entries[existingEntryIndex] = newEntry;
-  }
-  if (isFileExists && existingEntryIndex === -1) {
-    // 追加
-    const newEntry = await getEntryFromFile(addingFilePath);
-    index.entries.push(newEntry);
-  }
-  if (!isFileExists && existingEntryIndex !== -1) {
-    // 削除
-    index.entries = [
-      ...index.entries.slice(0, existingEntryIndex),
-      ...index.entries.slice(existingEntryIndex + 1),
-    ];
+  for (const addingFilePath of addingFiles) {
+    const isFileExists = await doesFileExist(addingFilePath);
+    const existingEntryIndex = index.entries.findIndex(
+      (entry) => entry.fileName === addingFilePath,
+    );
+    if (!isFileExists && existingEntryIndex === -1) {
+      return;
+    }
+    if (isFileExists && existingEntryIndex !== -1) {
+      // 更新
+      const newEntry = await getEntryFromFile(addingFilePath);
+      index.entries[existingEntryIndex] = newEntry;
+    }
+    if (isFileExists && existingEntryIndex === -1) {
+      // 追加
+      const newEntry = await getEntryFromFile(addingFilePath);
+      index.entries.push(newEntry);
+    }
+    if (!isFileExists && existingEntryIndex !== -1) {
+      // 削除
+      index.entries = [
+        ...index.entries.slice(0, existingEntryIndex),
+        ...index.entries.slice(existingEntryIndex + 1),
+      ];
+    }
   }
   await index.dump(indexPath);
   return;
