@@ -6,8 +6,12 @@ import { uncompressZlib } from "../utils.js";
 export class Blob {
   content: string;
   hash: string;
+  constructor() {
+    this.content = "";
+    this.hash = "";
+  }
 
-  constructor(path: string) {
+  public load(path: string): void {
     // blobのオブジェクトファイルを読み込む
     const data = uncompressZlib(path);
 
