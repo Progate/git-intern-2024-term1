@@ -1,9 +1,8 @@
 import * as fs from "node:fs";
-import { access } from "node:fs/promises";
+import * as fsPromises from "node:fs/promises";
 import * as path from "node:path";
-import { deflateSync } from "node:zlib";
-import { exit } from "process";
-import { inflateSync } from "zlib";
+import { exit } from "node:process";
+import { deflateSync, inflateSync } from "node:zlib";
 
 export function uncompressZlib(path: string): string {
   try {
@@ -55,7 +54,7 @@ export function fetchHeadHash(): string | undefined {
 
 export async function doesFileExist(filePath: string): Promise<boolean> {
   try {
-    await access(filePath);
+    await fsPromises.access(filePath);
     return true;
   } catch {
     return false;

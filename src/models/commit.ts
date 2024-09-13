@@ -1,7 +1,7 @@
-import * as crypto from "crypto";
-import * as fs from "fs";
-import * as os from "os";
-import { exit } from "process";
+import { createHash } from "node:crypto";
+import * as fs from "node:fs";
+import * as os from "node:os";
+import { exit } from "node:process";
 
 import {
   compressZlib,
@@ -67,7 +67,7 @@ export class Commit {
 
     const content = this.generateContent();
 
-    this.hash = crypto.createHash("sha1").update(content).digest("hex");
+    this.hash = createHash("sha1").update(content).digest("hex");
   }
 
   generateContent(): Buffer {
