@@ -45,7 +45,9 @@ export class Blob {
     if (!existsSync(blobObjectDir)) {
       mkdirSync(blobObjectDir, { recursive: true });
     }
-    await fs.writeFile(blobObjPath, deflateSync(store));
+    if (!existsSync(blobObjPath)) {
+      await fs.writeFile(blobObjPath, deflateSync(store), { mode: 0o444 });
+    }
     return sha1.toString("hex");
   }
 }
