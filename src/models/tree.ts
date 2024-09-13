@@ -116,7 +116,7 @@ export class Tree {
     }
 
     if (fs.existsSync(path)) return;
-    fs.writeFileSync(path, compressedContent, {mode: 0o444});
+    fs.writeFileSync(path, compressedContent, { mode: 0o444 });
   }
 }
 
