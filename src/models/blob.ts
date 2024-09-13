@@ -1,6 +1,6 @@
 import { createHash } from "crypto";
-import * as fs from "fs/promises";
 import { existsSync, mkdirSync } from "fs";
+import * as fs from "fs/promises";
 import { exit } from "process";
 import { deflateSync } from "zlib";
 
