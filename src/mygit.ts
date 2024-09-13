@@ -4,8 +4,6 @@ import { add } from "./commands/add.js";
 import { commit } from "./commands/commit.js";
 
 export const mygit = async (argv: Array<string>): Promise<void> => {
-  console.log(argv);
-
   if (argv[2] === "add") {
     const addingFilePath = argv[3];
     if (!addingFilePath) {
