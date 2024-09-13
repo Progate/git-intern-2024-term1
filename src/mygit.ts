@@ -2,6 +2,7 @@ import { exit } from "node:process";
 
 import { add } from "./commands/add.js";
 import { commit } from "./commands/commit.js";
+import { log } from "./commands/log.js";
 
 export const mygit = async (argv: Array<string>): Promise<void> => {
   if (!argv[2]) {
@@ -26,10 +27,14 @@ export const mygit = async (argv: Array<string>): Promise<void> => {
       }
       commit(argv[3], argv[4], argv[5]);
       break;
+    case "log":
+      log();
+      return;
     default:
       console.error(`Unknown command: ${commandName}`);
       exit(1);
   }
+
   // Avoid eslint error by adding some async operation.
   await new Promise((resolve) => setTimeout(resolve, 1000));
 };
