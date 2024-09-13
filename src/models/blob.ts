@@ -1,5 +1,6 @@
 import { createHash } from "crypto";
 import * as fs from "fs/promises";
+import { existsSync, mkdirSync } from "fs";
 import { exit } from "process";
 import { deflateSync } from "zlib";
 
@@ -36,12 +37,14 @@ export class Blob {
     hash.update(store);
     const sha1 = Buffer.from(hash.digest("hex"), "hex");
 
-    const blobObjPath =
-      getGitPath(process.cwd()) +
-      "objects/" +
-      sha1.toString("hex").slice(0, 2) +
-      "/" +
-      sha1.toString("hex").slice(2);
+    const strHash = sha1.toString("hex");
+    const prefix = strHash.slice(0, 2);
+    const suffix = strHash.slice(2);
+    const blobObjectDir = getGitPath(process.cwd()) + "objects/" + prefix;
+    const blobObjPath = blobObjectDir + "/" + suffix;
+    if (!existsSync(blobObjectDir)) {
+      mkdirSync(blobObjectDir, { recursive: true });
+    }
     await fs.writeFile(blobObjPath, deflateSync(store));
     return sha1.toString("hex");
   }
