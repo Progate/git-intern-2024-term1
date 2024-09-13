@@ -28,6 +28,7 @@ export const mygit = async (argv: Array<string>): Promise<void> => {
       break;
     default:
       console.error(`Unknown command: ${commandName}`);
+      exit(1);
   }
   // Avoid eslint error by adding some async operation.
   await new Promise((resolve) => setTimeout(resolve, 1000));
