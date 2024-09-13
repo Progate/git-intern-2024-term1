@@ -20,9 +20,7 @@ export function commit(
   if (headContent.startsWith("ref: ")) {
     headPath = getGitPath(process.cwd()) + headContent.slice("ref: ".length);
   }
-  const headDir = headPath.split("/")
-    .slice(0, -1)
-    .join("/");
+  const headDir = headPath.split("/").slice(0, -1).join("/");
   if (!existsSync(headDir)) {
     mkdirSync(headDir, { recursive: true }); // ディレクトリを再帰的に作成
   }
