@@ -3,6 +3,7 @@ import { exit } from "process";
 import { add } from "./commands/add.js";
 import { commit } from "./commands/commit.js";
 import { hello } from "./hello.js";
+import { log } from "./commands/log.js";
 
 export const mygit = async (argv: Array<string>): Promise<void> => {
   console.log(hello());
@@ -25,6 +26,10 @@ export const mygit = async (argv: Array<string>): Promise<void> => {
       exit(1);
     }
     commit(argv[3], argv[4], argv[5]);
+  }
+
+  if(argv[2] === "log") {
+    log();
   }
   // Avoid eslint error by adding some async operation.
   await new Promise((resolve) => setTimeout(resolve, 1000));
