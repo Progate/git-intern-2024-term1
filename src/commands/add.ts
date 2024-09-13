@@ -40,7 +40,6 @@ const getEntryFromFile = async (addingFilePath: string): Promise<Entry> => {
 
 export const add = async (addingFilePath: string): Promise<void> => {
   const indexPath = getGitPath(process.cwd()) + "index";
-  console.log(indexPath);
   const index = new Index();
   if (await doesFileExist(indexPath)) {
     await index.build(indexPath);
@@ -69,8 +68,6 @@ export const add = async (addingFilePath: string): Promise<void> => {
       ...index.entries.slice(existingEntryIndex + 1),
     ];
   }
-  console.log(index.entries);
   await index.dump(indexPath);
-
   return;
 };
