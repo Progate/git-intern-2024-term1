@@ -11,7 +11,7 @@ export function fetchFilesIn(path: string): Array<string> {
   const files = fs.readdirSync(path);
   const result: Array<string> = [];
   files.forEach((file) => {
-    if (file.startsWith(".")) return
+    if (file.startsWith(".")) return;
     const fullPath = path + "/" + file;
     const stats = fs.statSync(fullPath);
     if (stats.isDirectory()) {
@@ -63,8 +63,7 @@ export const status = async (): Promise<void> => {
   const files = fetchFilesIn(process.cwd());
   const trackedFiles = index.entries.map((entry) => entry.inode);
   const untrackedFiles = files.filter(
-    (file) =>
-      !trackedFiles.includes(fs.statSync(file).ino),
+    (file) => !trackedFiles.includes(fs.statSync(file).ino),
   );
   console.info("\nUntracked files:");
   untrackedFiles.forEach((file) => {
