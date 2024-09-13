@@ -9,9 +9,9 @@ export function commit(
   email?: string,
 ): void {
   // commit objを生成する
-  const commitObj = new Commit(message, username, email);
-
-  commitObj.tree.dump();
+  const commitObj = new Commit();
+  commitObj.build(message, username, email);
+  commitObj.tree?.dump();
   commitObj.dump();
 
   // headをhashに書き換える
