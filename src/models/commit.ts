@@ -65,6 +65,8 @@ export class Commit {
     if (!fs.existsSync(objectDir)) {
       fs.mkdirSync(objectDir, { recursive: true }); // ディレクトリを再帰的に作成
     }
-    fs.writeFileSync(path, compressedContent);
+
+    if(fs.existsSync(path)) return; // ファイルがすでにあるならつくない
+    fs.writeFileSync(path, compressedContent, {mode: 0o444});
   }
 }

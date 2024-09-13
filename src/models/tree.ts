@@ -114,7 +114,9 @@ export class Tree {
     if (!fs.existsSync(objectDir)) {
       fs.mkdirSync(objectDir, { recursive: true }); // ディレクトリを再帰的に作成
     }
-    fs.writeFileSync(path, compressedContent);
+
+    if (fs.existsSync(path)) return;
+    fs.writeFileSync(path, compressedContent, {mode: 0o444});
   }
 }
 
